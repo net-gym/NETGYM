@@ -1009,7 +1009,7 @@
             showToast("Kalkulator BMI", `Berhasil dihitung! IMT: ${scoreFormatted}`);
         }
 
-        // --- INTERACTIVE BODY FAT CALCULATION ---
+        // --- INTERACTIVE BODY FAT CALCULATION (UPDATED) ---
         function calculateBodyFat(event) {
             event.preventDefault();
             const gender = document.querySelector('input[name="gender"]:checked').value;
@@ -1031,25 +1031,65 @@
             if (bodyFat < 2 || bodyFat > 60) { showToast("Akurasi Lemak", "Mohon periksa kembali pita ukur Anda.", false); return; }
 
             const fatFormatted = bodyFat.toFixed(1);
-            let category = ""; let badgeClass = "";
+            let category = ""; 
+            let badgeClass = "";
+            let advice = "";
+            let targetRowId = "";
+
+            // Reset highlight semua baris tabel lemak terlebih dahulu
+            const allRows = document.querySelectorAll('#tab-fat table tbody tr');
+            allRows.forEach(row => row.className = "hover:bg-white/5 transition-colors");
+
             if (gender === 'male') {
-                if (bodyFat < 6) { category = "Essential Fat"; badgeClass = "bg-sky-500/20 text-sky-400"; }
-                else if (bodyFat < 14) { category = "Atlet"; badgeClass = "bg-lime-500/20 text-lime-400"; }
-                else if (bodyFat < 18) { category = "Bugar (Fit)"; badgeClass = "bg-brand-accent/20 text-brand-accent"; }
-                else if (bodyFat < 25) { category = "Sedang"; badgeClass = "bg-yellow-500/20 text-yellow-400"; }
-                else { category = "Berlebih"; badgeClass = "bg-red-500/20 text-red-500"; }
+                if (bodyFat < 6) { 
+                    category = "Lemak Esensial"; badgeClass = "bg-sky-500/20 text-sky-400"; targetRowId = "male-essential";
+                    advice = "Kadar lemak minimum yang dibutuhkan tubuh untuk bertahan hidup dan melindungi organ vital. Tidak disarankan berada di bawah zona ini dalam jangka panjang.";
+                } else if (bodyFat < 14) { 
+                    category = "Atlet"; badgeClass = "bg-lime-500/20 text-lime-400"; targetRowId = "male-athlete";
+                    advice = "Performa fisik optimal dengan definisi otot yang sangat tajam (*shredded*). Umum dimiliki oleh atlet profesional, pelari, atau binaragawan.";
+                } else if (bodyFat < 18) { 
+                    category = "Bugar (Fitness)"; badgeClass = "bg-brand-accent/20 text-brand-accent"; targetRowId = "male-fitness";
+                    advice = "Kondisi fisik prima, atletis, dan sangat sehat. Vaskularisasi otot terlihat baik dan risiko penyakit metabolik sangat rendah.";
+                } else if (bodyFat < 25) { 
+                    category = "Sedang (Average)"; badgeClass = "bg-yellow-500/20 text-yellow-400"; targetRowId = "male-average";
+                    advice = "Rata-rayanya pria sehat secara umum. Definisi otot kurang terlihat menonjol, namun komposisi tubuh masih berada pada batas aman.";
+                } else { 
+                    category = "Berlebih (Obese)"; badgeClass = "bg-red-500/20 text-red-500"; targetRowId = "male-obese";
+                    advice = "Kadar lemak tinggi. Berisiko memicu penumpukan lemak visceral di sekitar organ dalam yang memicu penyakit jantung dan diabetes. Disarankan memulai program latihan beban & defisit kalori.";
+                }
             } else {
-                if (bodyFat < 14) { category = "Essential Fat"; badgeClass = "bg-sky-500/20 text-sky-400"; }
-                else if (bodyFat < 21) { category = "Atlet"; badgeClass = "bg-lime-500/20 text-lime-400"; }
-                else if (bodyFat < 25) { category = "Bugar (Fit)"; badgeClass = "bg-brand-accent/20 text-brand-accent"; }
-                else if (bodyFat < 32) { category = "Sedang"; badgeClass = "bg-yellow-500/20 text-yellow-400"; }
-                else { category = "Berlebih"; badgeClass = "bg-red-500/20 text-red-500"; }
+                if (bodyFat < 14) { 
+                    category = "Lemak Esensial"; badgeClass = "bg-sky-500/20 text-sky-400"; targetRowId = "female-essential";
+                    advice = "Jumlah lemak dasar minimum wanita demi menjaga kestabilan hormon reproduksi dan fungsi biologis. Menembus batas bawah ini dapat mengganggu siklus bulanan.";
+                } else if (bodyFat < 21) { 
+                    category = "Atlet"; badgeClass = "bg-lime-500/20 text-lime-400"; targetRowId = "female-athlete";
+                    advice = "Fisik yang sangat terlatih dengan kadar lemak rendah. Otot inti perut dan bagian tubuh lain terlihat kencang dan terdefinisi dengan jelas.";
+                } else if (bodyFat < 25) { 
+                    category = "Bugar (Fit)"; badgeClass = "bg-brand-accent/20 text-brand-accent"; targetRowId = "female-fitness";
+                    advice = "Komposisi tubuh ideal untuk estetika dan kebugaran jangka panjang. Tubuh terlihat kencang tanpa terlihat terlalu kurus.";
+                } else if (bodyFat < 32) { 
+                    category = "Sedang (Average)"; badgeClass = "bg-yellow-500/20 text-yellow-400"; targetRowId = "female-average";
+                    advice = "Kategori sehat standar bagi wanita secara umum. Tubuh memiliki lekukan alami yang sehat dengan energi yang seimbang.";
+                } else { 
+                    category = "Berlebih (Obese)"; badgeClass = "bg-red-500/20 text-red-500"; targetRowId = "female-obese";
+                    advice = "Kadar akumulasi lemak tinggi. Dapat memperberat kerja sendi dan meningkatkan risiko gangguan kardiovaskular. Direkomendasikan melakukan kombinasi latihan kardio dan strength training di NETGYM.";
+                }
             }
 
+            // Update UI Result Box
             document.getElementById('fatScore').innerText = `${fatFormatted}%`;
             document.getElementById('fatCategoryBadge').innerText = category;
             document.getElementById('fatCategoryBadge').className = `text-xs font-extrabold px-3 py-1 rounded-full uppercase ${badgeClass}`;
+            document.getElementById('fatAdvice').innerText = advice;
             document.getElementById('fatResultBox').classList.remove('hidden');
+
+            // Jalankan Highlight pada baris tabel yang cocok sesuai id tujuan
+            const matchingRow = document.getElementById(targetRowId);
+            if (matchingRow) {
+                const themeColorClass = gender === 'male' ? (bodyFat >= 25 ? 'bg-red-500/10 border-l-2 border-red-500' : 'bg-lime-500/10 border-l-2 border-brand-accent') : (bodyFat >= 32 ? 'bg-red-500/10 border-l-2 border-red-500' : 'bg-lime-500/10 border-l-2 border-brand-accent');
+                matchingRow.className = `${themeColorClass} transition-colors`;
+            }
+
             showToast("Kalkulator Lemak", `Lemak dihitung! Hasil: ${fatFormatted}%`);
         }
 
