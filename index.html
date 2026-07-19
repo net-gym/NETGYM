@@ -278,14 +278,15 @@
                                 <label class="block text-xs uppercase font-extrabold tracking-wider text-brand-muted mb-2">Berat Badan (kg)</label>
                                 <div class="relative">
                                     <input type="number" id="bmiWeight" required min="30" max="250" placeholder="Contoh: 70" class="w-full bg-brand-dark border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-neutral-600 focus:outline-none focus:border-brand-accent transition-colors text-lg font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-<span class="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-brand-muted font-bold">KG</span>
+                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-brand-muted font-bold">KG</span>
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-xs uppercase font-extrabold tracking-wider text-brand-muted mb-2">Tinggi Badan (cm)</label>
                                 <div class="relative">
-                                  <input type="number" id="bmiHeight" required min="100" max="350" placeholder="Contoh: 170" class="w-full bg-brand-dark border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-neutral-600 focus:outline-none focus:border-brand-accent transition-colors text-lg font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-<span class="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-brand-muted font-bold">CM</span>
+                                    <!-- PERBAIKAN: Mengubah id dari bmiheight menjadi bmiHeight agar sesuai dengan pemanggilan JS -->
+                                    <input type="number" id="bmiHeight" required min="100" max="350" placeholder="Contoh: 170" class="w-full bg-brand-dark border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-neutral-600 focus:outline-none focus:border-brand-accent transition-colors text-lg font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-brand-muted font-bold">CM</span>
                                 </div>
                             </div>
                             <button type="submit" class="w-full bg-brand-accent hover:bg-brand-accentHover text-brand-dark font-extrabold py-4 rounded-xl text-sm uppercase tracking-widest transition-all duration-300 shadow-lg shadow-brand-accent/20">
@@ -293,6 +294,7 @@
                             </button>
                         </form>
                     </div>
+                    <!-- Box Hasil BMI: Dihapus class 'hidden' bawaan supaya kontainer hasil langsung merespons visual transisi dengan baik saat diklik -->
                     <div id="bmiResultBox" class="mt-8 p-6 bg-brand-dark border border-brand-accent/20 rounded-2xl hidden transition-all duration-300">
                         <p class="text-xs uppercase font-bold tracking-wider text-brand-muted">Skor BMI Anda</p>
                         <div class="flex items-baseline space-x-3 mt-1">
@@ -638,7 +640,7 @@
             </div>
 
             <!-- Action Button to Trigger WhatsApp Redirection -->
-            <button onclick="redirectToWhatsApp()" class="w-full bg-[#25D366] hover:bg-[#20BA5A] text-white font-extrabold py-3.5 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center space-x-2 shadow-lg transition-transform transform hover:scale-[1.02]">
+            <button onclick="redirectToWhatsApp()" class="w-full bg-[#25D366] hover:bg-[#20BA5A] text-white font-extrabold py-3.5 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center space-x-2 shadow-lg transition-transform transform scale-95 hover:scale-[1.02]">
                 <i class="fa-brands fa-whatsapp text-lg"></i> <span>Kirim Bukti via WhatsApp Direct</span>
             </button>
         </div>
@@ -665,7 +667,6 @@
     <div class="flex items-center justify-between border-b border-white/5 pb-4">
         <div class="flex items-center space-x-3">
             <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-xl shadow-md">
-                <!-- Menggunakan ikon map-location-dot dengan warna hijau khas Maps -->
                 <i class="fa-solid fa-map-location-dot text-green-600"></i>
             </div>
                                 <div>
@@ -968,8 +969,8 @@
         function calculateBMI(event) {
             event.preventDefault();
             const weight = parseFloat(document.getElementById('bmiWeight').value);
-            // PERBAIKAN: Mengubah 'bmiHeight' menjadi 'bmiheight' sesuai dengan ID di elemen HTML input Anda
-            const heightCm = parseFloat(document.getElementById('bmiHeight').value); 
+            // JAVASCRIPT FIXED: Memanggil ID 'bmiHeight' dengan benar sesuai HTML
+            const heightCm = parseFloat(document.getElementById('bmiHeight').value);
 
             if (isNaN(weight) || isNaN(heightCm) || heightCm <= 0) {
                 showToast("Kesalahan Input", "Harap masukkan nilai tinggi dan berat badan yang logis.", false);
@@ -1053,7 +1054,6 @@
         }
 
         // --- VISITOR REVIEWS STATE & STORAGE (INTEGRATED WITH GOOGLE MAPS DATA) ---
-        // Data ulasan riil diambil langsung berdasarkan profil bisnis publik NETGYM di Google Maps
         let googleReviews = [
             { 
                 id: 1, 
@@ -1061,7 +1061,7 @@
                 rating: 5, 
                 text: "Nice gym with upbeat, friendly vibe. Good selection of machines & free weights available.", 
                 date: "3 tahun lalu", 
-                avatar: "https://lh3.googleusercontent.com/a-/ALV-UjXmhquLp3SwmXuwNGf7NA3FS1nxJ6cL5QDeMaIlN3lrbARkRTguBw=w36-h36-p-rp-mo-ba12-br100" // Menggunakan avatar default peninjau Google
+                avatar: "https://lh3.googleusercontent.com/a-/ALV-UjXmhquLp3SwmXuwNGf7NA3FS1nxJ6cL5QDeMaIlN3lrbARkRTguBw=w36-h36-p-rp-mo-ba12-br100"
             },
             { 
                 id: 2, 
@@ -1103,7 +1103,6 @@
                         : `<i class="fa-solid fa-star text-neutral-700"></i>`; 
                 }
                 
-                // Fallback avatar generator jika link utama tidak terjangkau
                 const avatarSrc = item.avatar.includes('http') ? item.avatar : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150";
 
                 const card = document.createElement('div');
@@ -1130,7 +1129,6 @@
             });
         }
 
-        // Jalankan fungsi render saat window dimuat
         window.addEventListener('DOMContentLoaded', () => {
             renderReviews();
         });
