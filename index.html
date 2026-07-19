@@ -1009,7 +1009,7 @@
             showToast("Kalkulator BMI", `Berhasil dihitung! IMT: ${scoreFormatted}`);
         }
 
-        // --- INTERACTIVE BODY FAT CALCULATION (UPDATED) ---
+        // --- INTERACTIVE BODY FAT CALCULATION (UPDATED CLASSIFICATION TEXT) ---
         function calculateBodyFat(event) {
             event.preventDefault();
             const gender = document.querySelector('input[name="gender"]:checked').value;
@@ -1046,7 +1046,7 @@
                     advice = "Kadar lemak minimum yang dibutuhkan tubuh untuk bertahan hidup dan melindungi organ vital. Tidak disarankan berada di bawah zona ini dalam jangka panjang.";
                 } else if (bodyFat < 14) { 
                     category = "Atlet"; badgeClass = "bg-lime-500/20 text-lime-400"; targetRowId = "male-athlete";
-                    advice = "Performa fisik optimal dengan definisi otot yang sangat tajam (*shredded*). Umum dimiliki oleh atlet profesional, pelari, atau binaragawan.";
+                    advice = "Performa fisik optimal dengan definisi otot yang sangat tajam (shredded). Umum dimiliki oleh atlet profesional, pelari, atau binaragawan.";
                 } else if (bodyFat < 18) { 
                     category = "Bugar (Fitness)"; badgeClass = "bg-brand-accent/20 text-brand-accent"; targetRowId = "male-fitness";
                     advice = "Kondisi fisik prima, atletis, dan sangat sehat. Vaskularisasi otot terlihat baik dan risiko penyakit metabolik sangat rendah.";
@@ -1076,21 +1076,25 @@
                 }
             }
 
-            // Update UI Result Box
+            // Update UI Result Box dengan menunjukkan hasil klasifikasi secara tertulis
             document.getElementById('fatScore').innerText = `${fatFormatted}%`;
             document.getElementById('fatCategoryBadge').innerText = category;
             document.getElementById('fatCategoryBadge').className = `text-xs font-extrabold px-3 py-1 rounded-full uppercase ${badgeClass}`;
-            document.getElementById('fatAdvice').innerText = advice;
+            
+            // Menggabungkan teks klasifikasi eksplisit dengan penjelasannya
+            document.getElementById('fatAdvice').innerHTML = `Klasifikasi kadar lemak Anda termasuk dalam kategori: <strong class="text-white">${category}</strong>.<br><br>${advice}`;
+            
             document.getElementById('fatResultBox').classList.remove('hidden');
 
             // Jalankan Highlight pada baris tabel yang cocok sesuai id tujuan
             const matchingRow = document.getElementById(targetRowId);
             if (matchingRow) {
-                const themeColorClass = gender === 'male' ? (bodyFat >= 25 ? 'bg-red-500/10 border-l-2 border-red-500' : 'bg-lime-500/10 border-l-2 border-brand-accent') : (bodyFat >= 32 ? 'bg-red-500/10 border-l-2 border-red-500' : 'bg-lime-500/10 border-l-2 border-brand-accent');
+                const isObese = category.includes("Berlebih");
+                const themeColorClass = isObese ? 'bg-red-500/10 border-l-2 border-red-500' : 'bg-lime-500/10 border-l-2 border-brand-accent';
                 matchingRow.className = `${themeColorClass} transition-colors`;
             }
 
-            showToast("Kalkulator Lemak", `Lemak dihitung! Hasil: ${fatFormatted}%`);
+            showToast("Kalkulator Lemak", `Lemak dihitung! Hasil: ${fatFormatted}% (${category})`);
         }
 
         // --- VISITOR REVIEWS STATE & STORAGE (INTEGRATED WITH GOOGLE MAPS DATA) ---
