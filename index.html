@@ -968,7 +968,8 @@
         function calculateBMI(event) {
             event.preventDefault();
             const weight = parseFloat(document.getElementById('bmiWeight').value);
-            const heightCm = parseFloat(document.getElementById('bmiHeight').value);
+            // PERBAIKAN: Mengubah 'bmiHeight' menjadi 'bmiheight' sesuai dengan ID di elemen HTML input Anda
+            const heightCm = parseFloat(document.getElementById('bmiheight').value); 
 
             if (isNaN(weight) || isNaN(heightCm) || heightCm <= 0) {
                 showToast("Kesalahan Input", "Harap masukkan nilai tinggi dan berat badan yang logis.", false);
